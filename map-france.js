@@ -29,6 +29,24 @@ const departements = {
 
 const excludedDepartements = new Set(['971', '972', '973', '974', '976']);
 
+function normalizeCode(code) {
+  if (code === undefined || code === null) {
+    return '';
+  }
+  
+  const stringCode = String(code).trim().toUpperCase();
+  
+  if (/^\d$/.test(stringCode)) {
+    return `0${stringCode}`;
+  }
+  
+  if (/^\d{2}$/.test(stringCode)) {
+    return stringCode;
+  }
+  
+  return stringCode;
+}
+
 // Parser CSV simple
 function parseCSV(text) {
   const lines = text.split('\n');
@@ -179,7 +197,8 @@ function drawMapWithGeoJSON(geoData) {
   
   features.forEach(feature => {
     const geometry = feature.geometry;
-    const code = feature.properties?.code || feature.properties?.code_insee || feature.properties?.code_departement;
+    const rawCode = feature.properties?.code || feature.properties?.code_insee || feature.properties?.code_departement;
+    const code = normalizeCode(rawCode);
     
     if (!code || excludedDepartements.has(code)) {
       return;
@@ -455,7 +474,7 @@ function updateMapColors() {
   // Calculer les taux pour 10 000 habitants (le CSV a taux_pour_mille, donc * 10)
   const tauxData = {};
   filteredData.forEach(d => {
-    const code = d.Code_departement;
+    const code = normalizeCode(d.Code_departement);
     if (!code || excludedDepartements.has(code)) {
       return;
     }
