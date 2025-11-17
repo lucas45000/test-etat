@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Histoire — Analyse de l'État 4001</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER FIXE DYNAMIQUE -->
+  <header class="site-header" id="header">
+    <div class="container">
+      <h1>Analyse de l'État 4001</h1>
+      <nav>
+        <a href="index.html">Accueil</a>
+        <a href="histoire.html" class="active">Histoire</a>
+        <a href="construction.html">Construction</a>
+        <a href="observatoire.html">Observatoire</a>
+        <a href="depasse.html">Outil dépassé</a>
+        <a href="ssmsi.html">SSMSI</a>
+        <a href="table-index.html">Table des index</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BOUTON MENU FLOTTANT -->
+  <div class="menu-bubble" id="menuBubble">☰</div>
+
+  <!-- MENU DÉROULANT -->
+  <div class="menu-dropdown" id="menuDropdown">
+    <a href="index.html">Accueil</a>
+    <a href="histoire.html">Histoire</a>
+    <a href="construction.html">Construction</a>
+    <a href="observatoire.html">Observatoire</a>
+    <a href="depasse.html">Outil dépassé</a>
+    <a href="ssmsi.html">SSMSI</a>
+    <a href="table-index.html">Table des index</a>
+  </div>
+
+  <main class="container">
+
+    <section class="content-block">
+      <h2>📜 Histoire de la base de données</h2>
+      <p>
+        Historiquement, <strong>l'État 4001</strong> est une base de données papier qui avait pour objectif de comptabiliser mensuellement l’activité policière. Ensuite, les données étaient agrégées pour créer un indicateur statistique annuel des faits recensés et transmis aux autorités judiciaires, ce qui limite largement leur nombre.
+      </p>
+
+      <div class="image-block">
+        <img src="images/archives.jpg" alt="Archives historiques" loading="lazy">
+      </div>
+    </section>
+
+    <section class="content-block">
+      <h3>📋 Comment on comptait et sur quel support ?</h3>
+      <p>
+        Les premières versions étaient rudimentaires. Les policiers et gendarmes ajoutaient une barre à chaque nouvelle affaire (dépôt de plainte, intervention d’initiative…).
+      </p>
+
+      <blockquote class="note">
+        Ne sont comptés que les crimes et délits ; exit les infractions routières et contraventions.
+      </blockquote>
+
+      <p>
+        Certaines données sont partiellement exclues, notamment celles découvertes par d’autres services que la police et la gendarmerie (douanes, fisc…). Ces administrations utilisent principalement des « transactions » comme sanction, donc rarement des poursuites.
+      </p>
+
+      <p>
+        Si une enquête est menée conjointement ou par les forces de sécurité, elle est comptabilisée (exemple : <em>infractions douanières d’importation de stupéfiants</em>).
+      </p>
+
+      <div class="image-block">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Police_report_form.jpg" alt="Formulaire de rapport de police" loading="lazy">
+      </div>
+    </section>
+
+    <section class="content-block">
+      <h3>📊 Les unités de compte</h3>
+      <p>
+        Les infractions sont recensées selon <strong>107 index</strong> (103 utilisés réellement). Certaines sont comptabilisées à cause de la victime (cambriolage, violence sexuelle) ou de l'auteur (usage/revente de stupéfiant, chèque falsifié…).
+      </p>
+
+      <div class="warning">
+        ⚠️ Impossible de réaliser des agrégats robustes : les unités de compte diffèrent, donc comparaison difficile entre les données.
+      </div>
+    </section>
+
+    <section class="content-block">
+      <h3>📉 Disparités et limites</h3>
+      <p>
+        Il existe une forte disparité entre les infractions à victime et celles sans victime – rarement signalées. L’indice de l'État 4001 ne couvre pas ces écarts ni les infractions inconnues.
+      </p>
+    </section>
+
+    <section class="content-block">
+      <h3>💻 Passage à l’ère numérique</h3>
+      <p>
+        Avec les outils informatiques, la base papier devient un <strong>fichier informatisé et généralisé</strong> pour les forces de sécurité intérieure.
+      </p>
+
+      <div class="image-block">
+        <img src="images/numerique.jpg" alt="Passage à l’ère numérique" loading="lazy">
+      </div>
+    </section>
+
+    <section class="content-block">
+      <h3>🎯 Pour quoi faire ?</h3>
+      <p>
+        Ces données sont utilisées dans la <strong>conduite et l’organisation des politiques publiques de sécurité et prévention</strong>.
+      </p>
+
+      <div class="info">
+        Pour autant, l'État 4001 devient progressivement l’<strong>outil de référence</strong> pour mesurer la délinquance et son évolution.
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a class="nav-button prev" href="index.html">← Page précédente</a>
+      <a class="nav-button next" href="construction.html">Page suivante →</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 — Projet académique. Équipe de rendu.</p>
+    </div>
+  </footer>
+
+  <script src="header.js"></script>
+</body>
+</html>
