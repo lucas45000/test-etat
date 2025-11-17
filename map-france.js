@@ -130,46 +130,186 @@ async function loadData() {
   }
 }
 
-// Charger la carte SVG de France
+// Charger la carte SVG de France depuis le fichier local coordonnes (GeoJSON)
 async function loadMap() {
   try {
-    // Essayer de charger une carte GeoJSON depuis un CDN (compatible GitHub Pages)
-    // Note: Cette URL utilise raw.githubusercontent.com qui est compatible CORS
-    const response = await fetch('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements.geojson', {
+    const response = await fetch('./coordonnes', {
       mode: 'cors',
       cache: 'default'
     });
     
     if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+      throw new Error(`Erreur HTTP lors du chargement de coordonnes: ${response.status}`);
     }
     
     const geoData = await response.json();
+    
+    if (!geoData || !Array.isArray(geoData.features) || geoData.features.length === 0) {
+      throw new Error('Le fichier coordonnes ne contient aucune feature GeoJSON valide.');
+    }
+    
     drawMapWithGeoJSON(geoData);
   } catch (error) {
-    // Si le fichier externe ne fonctionne pas, utiliser une carte SVG intégrée simplifiée
-    console.log('Utilisation de la carte SVG intégrée (fallback)');
+    console.error('Impossible de charger la carte détaillée, utilisation du fallback simplifié.', error);
     createDepartementMap();
   }
 }
 
-// Dessiner la carte avec GeoJSON
+// Dessiner la carte avec GeoJSON réel
 function drawMapWithGeoJSON(geoData) {
   const container = document.getElementById('map-svg');
+  if (!container) return;
+  
   container.innerHTML = '';
   
+  const width = 1000;
+  const height = 1000;
+  const padding = 40;
+  const features = Array.isArray(geoData.features) ? geoData.features : [];
+  const bounds = getGeoBounds(features);
+  const project = createProjector(bounds, width, height, padding);
+  
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', '0 0 1000 1000');
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   svg.setAttribute('class', 'france-map');
   svg.style.width = '100%';
   svg.style.height = 'auto';
-  
-  // Convertir GeoJSON en SVG (simplifié)
-  // Pour une vraie conversion, il faudrait projeter les coordonnées géographiques
-  // Ici, on va créer une carte simplifiée avec des rectangles représentant les départements
-  
   container.appendChild(svg);
-  createDepartementMap();
+  
+  features.forEach(feature => {
+    const geometry = feature.geometry;
+    const code = feature.properties?.code || feature.properties?.code_insee || feature.properties?.code_departement;
+    
+    if (!geometry || !code) {
+      return;
+    }
+    
+    const pathData = geometryToPath(geometry, project);
+    
+    if (!pathData) {
+      return;
+    }
+    
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathData);
+    path.setAttribute('class', 'departement-path');
+    path.setAttribute('data-code', code);
+    path.setAttribute('fill', '#e0e0e0');
+    path.setAttribute('stroke', '#999');
+    path.setAttribute('stroke-width', '0.8');
+    
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    title.textContent = `${code} - ${departements[code] || 'Département'}`;
+    path.appendChild(title);
+    
+    svg.appendChild(path);
+  });
+  
+  updateMapColors();
+}
+
+function getGeoBounds(features) {
+  const bounds = {
+    minLon: Infinity,
+    maxLon: -Infinity,
+    minLat: Infinity,
+    maxLat: -Infinity
+  };
+  
+  features.forEach(feature => {
+    forEachCoordinate(feature.geometry, coord => {
+      const [lon, lat] = coord;
+      
+      if (typeof lon !== 'number' || typeof lat !== 'number') {
+        return;
+      }
+      
+      bounds.minLon = Math.min(bounds.minLon, lon);
+      bounds.maxLon = Math.max(bounds.maxLon, lon);
+      bounds.minLat = Math.min(bounds.minLat, lat);
+      bounds.maxLat = Math.max(bounds.maxLat, lat);
+    });
+  });
+  
+  if (!isFinite(bounds.minLon) || !isFinite(bounds.maxLon) || !isFinite(bounds.minLat) || !isFinite(bounds.maxLat)) {
+    return {minLon: 0, maxLon: 1, minLat: 0, maxLat: 1};
+  }
+  
+  return bounds;
+}
+
+function createProjector(bounds, width, height, padding) {
+  const lonRange = bounds.maxLon - bounds.minLon || 1;
+  const latRange = bounds.maxLat - bounds.minLat || 1;
+  
+  const usableWidth = width - padding * 2;
+  const usableHeight = height - padding * 2;
+  const scale = Math.min(usableWidth / lonRange, usableHeight / latRange);
+  const offsetX = padding + (usableWidth - lonRange * scale) / 2;
+  const offsetY = padding + (usableHeight - latRange * scale) / 2;
+  
+  return ([lon, lat]) => {
+    const x = offsetX + (lon - bounds.minLon) * scale;
+    const y = height - (offsetY + (lat - bounds.minLat) * scale);
+    return [Number(x.toFixed(2)), Number(y.toFixed(2))];
+  };
+}
+
+function geometryToPath(geometry, project) {
+  if (!geometry || !geometry.type || !geometry.coordinates) {
+    return '';
+  }
+  
+  if (geometry.type === 'Polygon') {
+    return polygonToPath(geometry.coordinates, project);
+  }
+  
+  if (geometry.type === 'MultiPolygon') {
+    return geometry.coordinates.map(poly => polygonToPath(poly, project)).join(' ');
+  }
+  
+  return '';
+}
+
+function polygonToPath(rings, project) {
+  if (!Array.isArray(rings)) return '';
+  
+  return rings.map(ring => {
+    if (!Array.isArray(ring) || ring.length === 0) {
+      return '';
+    }
+    
+    const commands = ring.map((coord, index) => {
+      const projected = project(coord);
+      if (!projected) return '';
+      const [x, y] = projected;
+      const cmd = index === 0 ? 'M' : 'L';
+      return `${cmd}${x} ${y}`;
+    }).filter(Boolean);
+    
+    if (commands.length === 0) {
+      return '';
+    }
+    
+    return `${commands.join(' ')} Z`;
+  }).filter(Boolean).join(' ');
+}
+
+function forEachCoordinate(geometry, callback) {
+  if (!geometry || !geometry.coordinates) return;
+  
+  const iterate = (coords) => {
+    if (!Array.isArray(coords)) return;
+    
+    if (typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+      callback(coords);
+      return;
+    }
+    
+    coords.forEach(iterate);
+  };
+  
+  iterate(geometry.coordinates);
 }
 
 // Créer une carte basique avec les départements (version simplifiée)
