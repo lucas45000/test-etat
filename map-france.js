@@ -24,9 +24,10 @@ const departements = {
   '78': 'Yvelines', '79': 'Deux-Sèvres', '80': 'Somme', '81': 'Tarn', '82': 'Tarn-et-Garonne',
   '83': 'Var', '84': 'Vaucluse', '85': 'Vendée', '86': 'Vienne', '87': 'Haute-Vienne',
   '88': 'Vosges', '89': 'Yonne', '90': 'Territoire de Belfort', '91': 'Essonne',
-  '92': 'Hauts-de-Seine', '93': 'Seine-Saint-Denis', '94': 'Val-de-Marne', '95': 'Val-d\'Oise',
-  '971': 'Guadeloupe', '972': 'Martinique', '973': 'Guyane', '974': 'La Réunion', '976': 'Mayotte'
+  '92': 'Hauts-de-Seine', '93': 'Seine-Saint-Denis', '94': 'Val-de-Marne', '95': 'Val-d\'Oise'
 };
+
+const excludedDepartements = new Set(['971', '972', '973', '974', '976']);
 
 // Parser CSV simple
 function parseCSV(text) {
@@ -179,6 +180,10 @@ function drawMapWithGeoJSON(geoData) {
   features.forEach(feature => {
     const geometry = feature.geometry;
     const code = feature.properties?.code || feature.properties?.code_insee || feature.properties?.code_departement;
+    
+    if (!code || excludedDepartements.has(code)) {
+      return;
+    }
     
     if (!geometry || !code) {
       return;
@@ -451,6 +456,9 @@ function updateMapColors() {
   const tauxData = {};
   filteredData.forEach(d => {
     const code = d.Code_departement;
+    if (!code || excludedDepartements.has(code)) {
+      return;
+    }
     const tauxPourMille = parseFloat(d.taux_pour_mille.replace(',', '.'));
     const tauxPourDixMille = tauxPourMille * 10;
     
