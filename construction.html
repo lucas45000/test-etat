@@ -39,15 +39,105 @@
   </div>
 
   <main class="container">
+
+    <!-- SECTION 1 -->
     <section class="content-block">
-      <h2>🏗️ Comment la base de données est-elle construite ?</h2>
-      <p>Décris la structure des fichiers, les variables, procédures de collecte, acteurs impliqués et étapes de validation. Ajoute graphiques/schémas si besoin.</p>
+      <h2>🏗️ Comment l’État 4001 est-il construit ?</h2>
+      <p>
+        <strong>L’État 4001</strong> est un fichier statistique mensuel centralisé par le
+        <strong>Service statistique ministériel de la sécurité intérieure (SSMSI)</strong>.
+        Il regroupe l’ensemble des infractions enregistrées par la police et la gendarmerie sur tout le territoire.
+      </p>
+      <blockquote class="note">
+        Chaque enregistrement correspond à un <strong>fait constaté</strong> — une infraction pour laquelle une procédure a été ouverte.
+      </blockquote>
+      <p>
+        Les variables associées décrivent l’infraction (index, nature), les circonstances, les unités de compte,
+        les données procédurales, les requalifications, et le service ayant enregistré le fait.
+      </p>
+      <div class="warning">
+        La base dépend entièrement de ce qui a été porté à la connaissance des services et de la manière dont ces services ont décidé de l’enregistrer.
+      </div>
     </section>
 
+    <!-- SECTION 2 -->
+    <section class="content-block">
+      <h3>🧩 L’enregistrement initial : le premier maillon décisif</h3>
+      <p>
+        Le processus commence au niveau local. Lorsqu’une personne porte plainte ou qu’une patrouille découvre une infraction,
+        l’agent saisit une procédure dans son logiciel (LRPPN ou LRPGN). Il choisit un index, décrit les faits, les victimes
+        et éventuellement les auteurs identifiés.
+      </p>
+      <blockquote class="note">
+        Cette phase conditionne la qualification de l’infraction — et donc la statistique future.
+      </blockquote>
+      <p>
+        Une même situation peut être classée sous plusieurs index selon les équipes, l’expérience des agents et les contextes locaux,
+        ce qui contribue à des variations territoriales non liées à la délinquance réelle.
+      </p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="content-block">
+      <h3>🔍 La validation hiérarchique : un second filtrage</h3>
+      <p>
+        Une fois la procédure rédigée, elle est relue et validée par un gradé ou un officier. Ce contrôle vise à garantir la
+        cohérence juridique et la bonne qualification pénale.
+      </p>
+      <p>
+        Les gradés peuvent modifier l’index, reformuler les faits ou préciser les unités de compte. Ce travail améliore la qualité
+        judiciaire du procès-verbal, mais modifie aussi les données statistiques finales.
+      </p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="content-block">
+      <h3>🔄 La transmission mensuelle : du local au national</h3>
+      <p>
+        Tous les mois, les fichiers des services de police et de gendarmerie sont exportés automatiquement vers les niveaux régionaux,
+        puis vers le <strong>SSMSI</strong>.
+      </p>
+      <blockquote class="note">
+        Une brigade de montagne, un commissariat urbain ou une unité d’outre-mer transmettent ainsi des données compatibles et comparables.
+      </blockquote>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="content-block">
+      <h3>🛠️ Les contrôles du SSMSI : une fabrique de la donnée</h3>
+      <p>
+        Le SSMSI applique une série de contrôles pour garantir la cohérence des données avant toute publication.
+      </p>
+      <ul>
+        <li><strong>Contrôles automatiques</strong> : détection des doublons et incohérences temporelles.</li>
+        <li><strong>Contrôles semi-automatisés</strong> : algorithmes repérant anomalies statistiques ou ruptures brutales.</li>
+        <li><strong>Contrôles humains</strong> : analyse des cas problématiques, demandes d’explications aux unités.</li>
+      </ul>
+      <div class="info">
+        Le chiffre statistique final est le produit d’une chaîne de validations successives — un nombre « construit ».
+      </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section class="content-block">
+      <h3>🌍 L’agrégation : du fait individuel à la carte de la délinquance</h3>
+      <p>
+        Une fois consolidées, les données sont agrégées selon les échelles territoriales — commune, département, région, niveau national.
+      </p>
+      <p>
+        Ces agrégats nourrissent les bilans, les études territoriales, les rapports publics, les arbitrages politiques et le débat médiatique.
+      </p>
+      <div class="warning">
+        Les chiffres disent autant quelque chose de la réalité criminelle que du fonctionnement administratif qui les produit.
+      </div>
+    </section>
+
+    <!-- NAVIGATION -->
     <div class="page-nav">
       <a class="nav-button prev" href="histoire.html">← Page précédente</a>
       <a class="nav-button next" href="observatoire.html">Page suivante →</a>
     </div>
+
   </main>
 
   <footer class="site-footer">
